@@ -1,0 +1,62 @@
+﻿@model QueueManagement.Application.DTOs.Token.TransferTokenDto
+
+<h2>Transfer Token</h2>
+
+<form asp-action="Transfer" method="post">
+
+    <input type="hidden"
+           asp-for="TokenId" />
+
+    <div asp-validation-summary="All"
+         class="text-danger"></div>
+
+    <div class="mb-3">
+
+        <label>Transfer To Category</label>
+
+        <select asp-for="ToCategoryId"
+                asp-items="ViewBag.Categories"
+                class="form-select">
+
+            <option value="0">
+                Select Category
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Reason</label>
+
+        <textarea asp-for="TransferReason"
+                  class="form-control">
+        </textarea>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-warning">
+        Transfer Token
+    </button>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger mt-3">
+
+            @TempData["Error"]
+
+        </div>
+    }
+
+</form>
+
+@section Scripts {
+
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+}

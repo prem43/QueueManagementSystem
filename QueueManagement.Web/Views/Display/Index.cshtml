@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Queue Display";
+}
+
+<h1 class="text-center mb-5">
+    Live Queue Display
+</h1>
+
+<div class="container">
+
+    <div class="card text-center shadow-lg">
+
+        <div class="card-header bg-primary text-white">
+
+            <h2>
+                Now Serving
+            </h2>
+
+        </div>
+
+        <div class="card-body">
+
+            <h1 id="tokenNumber"
+                style="font-size:80px;">
+
+                ---
+
+            </h1>
+
+            <h2 id="customerName"
+                class="text-success">
+            </h2>
+
+            <h2 id="counterName"
+                class="text-primary">
+            </h2>
+
+            <h3 id="categoryName">
+
+                Waiting...
+
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js">
+</script>
+
+<script>
+
+    const connection =
+        new signalR.HubConnectionBuilder()
+            .withUrl("/queueHub")
+            .build();
+
+    connection.on(
+        "ReceiveTokenCall",
+        function (
+            tokenNumber,
+            customerName,
+            categoryName,
+            counterName)
+        {
+            // Update UI
+
+            document.getElementById(
+                "tokenNumber").innerText =
+                tokenNumber;
+
+            document.getElementById(
+                "customerName").innerText =
+                customerName;
+
+            document.getElementById(
+                "categoryName").innerText =
+                categoryName;
+
+            document.getElementById(
+                "counterName").innerText =
+                counterName;
+
+            // Voice announcement
+
+            const message =
+                "Token " +
+                tokenNumber +
+                ", " +
+                customerName +
+                ", please go to " +
+                counterName+"counter";
+
+            const speech =
+                new SpeechSynthesisUtterance(
+                    message);
+
+            speech.lang = "en-US";
+
+            window.speechSynthesis.speak(
+                speech);
+        });
+
+    connection.start()
+        .then(function ()
+        {
+            console.log(
+                "SignalR Connected");
+        })
+        .catch(function (err)
+        {
+            return console.error(err.toString());
+        });
+
+</script>

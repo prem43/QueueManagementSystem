@@ -1,0 +1,154 @@
+﻿@model QueueManagement.Application.DTOs.Dashboard.DashboardDto
+
+<h2 class="mb-4">
+    Admin Dashboard
+</h2>
+
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-primary text-white">
+
+            <div class="card-body">
+
+                <h5>Pending Tokens</h5>
+
+                <h2>@Model.PendingTokens</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-success text-white">
+
+            <div class="card-body">
+
+                <h5>Serving Tokens</h5>
+
+                <h2>@Model.ServingTokens</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-dark text-white">
+
+            <div class="card-body">
+
+                <h5>Completed Tokens</h5>
+
+                <h2>@Model.CompletedTokens</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-3">
+
+        <div class="card bg-danger text-white">
+
+            <div class="card-body">
+
+                <h5>Skipped Tokens</h5>
+
+                <h2>@Model.SkippedTokens</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-6">
+
+        <div class="card">
+
+            <div class="card-header">
+                Average Wait Time
+            </div>
+
+            <div class="card-body">
+
+                <h1>
+                    @Model.AverageWaitTimeMinutes min
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card">
+
+            <div class="card-header">
+                Transferred Tokens
+            </div>
+
+            <div class="card-body">
+
+                <h1>
+                    @Model.TransferredTokens
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="mt-5">
+
+    <div class="card">
+
+        <div class="card-header">
+            Current Serving Tokens
+        </div>
+
+        <div class="card-body">
+
+            @if (Model.CurrentServingTokens.Any())
+            {
+                <ul class="list-group">
+
+                    @foreach (var token
+                                    in Model.CurrentServingTokens)
+                    {
+                        <li class="list-group-item">
+
+                            @token
+
+                        </li>
+                    }
+
+                </ul>
+            }
+            else
+            {
+                <p>No active serving tokens.</p>
+            }
+
+        </div>
+
+    </div>
+
+</div>

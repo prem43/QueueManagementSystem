@@ -1,0 +1,44 @@
+﻿@model QueueManagement.Application.DTOs.Counter.UpdateCounterDto
+
+<h2>Edit Counter</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden"
+           asp-for="Id" />
+
+    <div class="mb-3">
+
+        <label>Name</label>
+
+        <input asp-for="Name"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Counter Number</label>
+
+        <input asp-for="CounterNumber"
+               class="form-control" />
+
+    </div>
+
+    <div class="form-check mb-3">
+
+        <input asp-for="IsActive"
+               class="form-check-input" />
+
+        <label asp-for="IsActive"
+               class="form-check-label">
+        </label>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Update
+    </button>
+
+</form>

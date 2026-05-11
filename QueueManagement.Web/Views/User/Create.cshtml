@@ -1,0 +1,80 @@
+﻿@model QueueManagement.Application.DTOs.User.CreateUserDto
+
+<h2>Create User</h2>
+
+<form asp-action="Create" method="post">
+
+    <div asp-validation-summary="All"
+         class="text-danger"></div>
+
+    <div class="mb-3">
+
+        <label>Full Name</label>
+
+        <input asp-for="FullName"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Username</label>
+
+        <input asp-for="UserName"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Email</label>
+
+        <input asp-for="Email"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Password</label>
+
+        <input asp-for="Password"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Role</label>
+
+        <select asp-for="Role"
+                asp-items="ViewBag.Roles"
+                class="form-select">
+        </select>
+
+    </div>
+    <div class="mb-3">
+
+        <label>
+            Counter
+        </label>
+
+        <select asp-for="CounterId"
+                asp-items="ViewBag.Counters"
+                class="form-select">
+
+            <option value="">
+                Select Counter
+            </option>
+
+        </select>
+
+    </div>
+    <button type="submit"
+            class="btn btn-success">
+
+        Save
+
+    </button>
+
+</form>

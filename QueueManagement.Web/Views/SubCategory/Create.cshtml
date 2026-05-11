@@ -1,0 +1,41 @@
+﻿@model QueueManagement.Application.DTOs.SubCategory.CreateSubCategoryDto
+
+<h2>Create SubCategory</h2>
+
+<form asp-action="Create" method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label>Category</label>
+
+        <select asp-for="CategoryId"
+                asp-items="ViewBag.Categories"
+                class="form-select">
+            <option value="">Select Category</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Name</label>
+
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Prefix</label>
+
+        <input asp-for="Prefix" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Save
+    </button>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

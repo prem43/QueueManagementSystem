@@ -1,0 +1,128 @@
+﻿@model QueueManagement.Application.DTOs.Token.TokenReceiptDto
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+        Token Receipt
+    </title>
+
+    <style>
+
+        body {
+            font-family: monospace;
+            width: 80mm;
+            margin: auto;
+            padding: 10px;
+        }
+
+        .receipt {
+            width: 100%;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .token {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .line {
+            border-top: 1px dashed black;
+            margin: 10px 0;
+        }
+
+        .small {
+            font-size: 12px;
+        }
+
+        @@media print {
+            button
+
+        {
+            display: none;
+        }
+
+        body {
+            width: 80mm;
+        }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="receipt">
+
+        <div class="title">
+
+            Queue Token
+
+        </div>
+
+        <div class="line"></div>
+
+        <p>
+
+            <strong>
+                Customer
+            </strong>
+
+            <br />
+
+            @Model.CustomerName
+
+        </p>
+
+        <p>
+
+            <strong>
+                Category
+            </strong>
+
+            <br />
+
+            @Model.CategoryName
+
+        </p>
+
+        <div class="token">
+
+            @Model.TokenNumber
+
+        </div>
+
+        <div class="line"></div>
+
+        <p class="small">
+
+            @Model.GeneratedAt
+            .ToString("dd MMM yyyy hh:mm tt")
+
+        </p>
+
+        <button onclick="window.print()">
+
+            Print
+
+        </button>
+
+    </div>
+
+</body>
+
+</html>

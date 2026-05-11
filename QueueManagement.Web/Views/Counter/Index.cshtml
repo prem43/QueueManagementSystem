@@ -1,0 +1,58 @@
+﻿@model IEnumerable<QueueManagement.Application.DTOs.Counter.CounterDto>
+
+<h2>Counters</h2>
+
+<a asp-action="Create"
+   class="btn btn-primary mb-3">
+    Create Counter
+</a>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Counter No</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Name</td>
+
+                <td>@item.CounterNumber</td>
+
+                <td>
+                    @(item.IsActive
+                                    ? "Active"
+                                    : "Inactive")
+            </td>
+
+                <td>
+
+                    <a asp-action="Edit"
+                       asp-route-id="@item.Id"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@item.Id"
+                       class="btn btn-danger btn-sm">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+                }
+
+    </tbody>
+
+</table>
