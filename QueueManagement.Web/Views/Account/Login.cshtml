@@ -5,59 +5,276 @@
 }
 
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Queue Management System</title>
 
-    <title>Login</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap & FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-light: #f3f4f6;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- Animated Background Shapes --- */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 8s infinite alternate ease-in-out;
+        }
+
+        .shape1 {
+            width: 450px;
+            height: 450px;
+            background: rgba(79, 70, 229, 0.15); /* Soft Indigo */
+            top: -100px;
+            left: -150px;
+        }
+
+        .shape2 {
+            width: 350px;
+            height: 350px;
+            background: rgba(129, 140, 248, 0.15);
+            bottom: -50px;
+            right: -100px;
+            animation-delay: -4s;
+        }
+
+        @@keyframes float {
+            0%
+
+        {
+            transform: translateY(0px) scale(1);
+        }
+
+        100% {
+            transform: translateY(40px) scale(1.05);
+        }
+
+        }
+
+        /* --- Card Entry Animation --- */
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            /* Animation properties */
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @@keyframes slideUpFade {
+            to
+
+        {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        }
+
+        /* --- Header & Logo --- */
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .icon-box {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--primary-color), #818cf8);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-size: 30px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+        }
+
+        .login-header h3 {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0 0 5px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* --- Custom Form Inputs --- */
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .input-wrapper i {
+                position: absolute;
+                left: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #9ca3af;
+                transition: color 0.3s ease;
+                font-size: 1.1rem;
+            }
+
+        .form-control {
+            padding: 14px 15px 14px 45px;
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            background-color: #f9fafb;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: none !important;
+            color: var(--text-dark);
+        }
+
+            .form-control::placeholder {
+                color: #9ca3af;
+                font-weight: 400;
+            }
+
+            .form-control:focus {
+                background-color: #ffffff;
+                border-color: var(--primary-color);
+            }
+
+                .form-control:focus + i,
+                .form-control:not(:placeholder-shown) + i {
+                    color: var(--primary-color);
+                }
+
+        /* --- Button & Hover Effects --- */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+            }
+
+        /* --- Validation Styling --- */
+        .validation-summary-errors {
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: #ef4444;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+            .validation-summary-errors ul {
+                margin: 0;
+                padding-left: 20px;
+            }
+
+        .validation-summary-valid {
+            display: none;
+        }
+    </style>
 </head>
 
-<body class="bg-light d-flex
-           justify-content-center
-           align-items-center"
-      style="height:100vh;">
+<body>
 
-    <div class="card shadow p-4"
-         style="width:400px;">
+    <!-- Soft Animated Background Shapes -->
+    <div class="bg-shape shape1"></div>
+    <div class="bg-shape shape2"></div>
 
-        <h2 class="text-center mb-4">
-            Queue System Login
-        </h2>
+    <!-- Login Card -->
+    <div class="login-card">
 
-        <form asp-action="Login"
-              method="post">
+        <div class="login-header">
+            <div class="icon-box">
+                <i class="fa-solid fa-users-line"></i>
+            </div>
+            <h3>Welcome Back</h3>
+            <p>Sign in to your account</p>
+        </div>
 
-            <div asp-validation-summary="All"
-                 class="text-danger"></div>
+        <form asp-action="Login" method="post">
+
+            <!-- ASP.NET Validation Summary -->
+            <div asp-validation-summary="All" class="validation-summary-errors"></div>
 
             <div class="mb-3">
-
-                <label>Username</label>
-
-                <input asp-for="UserName"
-                       class="form-control" />
-
+                <label class="form-label">Username</label>
+                <div class="input-wrapper">
+                    <input asp-for="UserName" class="form-control" placeholder="Enter your username" autocomplete="username" />
+                    <i class="fa-regular fa-user"></i>
+                </div>
             </div>
 
             <div class="mb-3">
-
-                <label>Password</label>
-
-                <input asp-for="Password"
-                       class="form-control" />
-
+                <label class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+                    <i class="fa-solid fa-lock"></i>
+                </div>
             </div>
 
-            <button type="submit"
-                    class="btn btn-primary w-100">
-
-                Login
-
+            <button type="submit" class="btn btn-primary w-100">
+                Sign In <i class="fa-solid fa-arrow-right"></i>
             </button>
 
         </form>

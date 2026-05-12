@@ -1,128 +1,143 @@
 ﻿@model QueueManagement.Application.DTOs.Token.TokenReceiptDto
-
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-
-    <title>
-        Token Receipt
-    </title>
-
+    <title>Token Receipt</title>
     <style>
-
         body {
-            font-family: monospace;
+            font-family: 'Courier New', Courier, monospace;
             width: 80mm;
-            margin: auto;
-            padding: 10px;
+            margin: 0 auto;
+            padding: 15px;
+            background: #f4f4f4;
+            color: #000;
         }
 
-        .receipt {
-            width: 100%;
+        .receipt-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: center;
         }
 
+        .header-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
         .title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
         }
 
-        .token {
-            font-size: 42px;
-            font-weight: bold;
+        .divider {
+            border-top: 2px dashed #000;
+            margin: 15px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin: 5px 0;
+            text-align: left;
+        }
+
+        .token-box {
             margin: 20px 0;
+            padding: 15px;
+            border: 3px solid #000;
+            border-radius: 8px;
         }
 
-        .line {
-            border-top: 1px dashed black;
-            margin: 10px 0;
-        }
-
-        .small {
+        .token-label {
             font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
         }
 
+        .token-number {
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .print-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            width: 100%;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: sans-serif;
+        }
+
+            .print-btn:hover {
+                background: #333;
+            }
+
+        /* Hide UI elements and backgrounds when printing */
         @@media print {
-            button
+            body {
+                background: #fff;
+                padding: 0;
+                width: 80mm;
+            }
 
-        {
-            display: none;
-        }
+            .receipt-card {
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+            }
 
-        body {
-            width: 80mm;
-        }
-
+            .print-btn {
+                display: none;
+            }
         }
     </style>
-
 </head>
-
 <body>
+    <div class="receipt-card">
+        <div class="title">Queue System</div>
+        <div style="font-size: 12px;">Please wait for your turn</div>
 
-    <div class="receipt">
+        <div class="divider"></div>
 
-        <div class="title">
-
-            Queue Token
-
+        <div class="detail-row">
+            <strong>Customer:</strong>
+            <span>@Model.CustomerName</span>
+        </div>
+        <div class="detail-row">
+            <strong>Category:</strong>
+            <span>@Model.CategoryName</span>
         </div>
 
-        <div class="line"></div>
-
-        <p>
-
-            <strong>
-                Customer
-            </strong>
-
-            <br />
-
-            @Model.CustomerName
-
-        </p>
-
-        <p>
-
-            <strong>
-                Category
-            </strong>
-
-            <br />
-
-            @Model.CategoryName
-
-        </p>
-
-        <div class="token">
-
-            @Model.TokenNumber
-
+        <div class="token-box">
+            <div class="token-label">Your Token Number</div>
+            <div class="token-number">@Model.TokenNumber</div>
         </div>
 
-        <div class="line"></div>
+        <div class="divider"></div>
+        <div class="timestamp">Issued: @Model.GeneratedAt.ToString("dd MMM yyyy, hh:mm tt")</div>
 
-        <p class="small">
-
-            @Model.GeneratedAt
-            .ToString("dd MMM yyyy hh:mm tt")
-
-        </p>
-
-        <button onclick="window.print()">
-
-            Print
-
-        </button>
-
+        <button class="print-btn" onclick="window.print()">PRINT TICKET</button>
     </div>
-
 </body>
-
 </html>

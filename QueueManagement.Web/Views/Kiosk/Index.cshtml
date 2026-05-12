@@ -1,0 +1,283 @@
+﻿@model QueueManagement.Application.DTOs.Token.GenerateTokenDto
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>
+        Queue Kiosk
+    </title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+
+    <style>
+
+        body {
+            background-color: #f4f6f9;
+            font-family: Arial;
+        }
+
+        .kiosk-container {
+            max-width: 900px;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        .card {
+            border-radius: 20px;
+        }
+
+        .form-control,
+        .form-select {
+            height: 65px;
+            font-size: 24px;
+            border-radius: 12px;
+        }
+
+        label {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .btn-touch {
+            height: 80px;
+            font-size: 28px;
+            border-radius: 15px;
+        }
+
+        .title {
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        .option-box {
+            font-size: 22px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container kiosk-container">
+
+        <div class="card shadow-lg p-5">
+
+            <div class="text-center mb-5">
+
+                <img src="/logo.png"
+                     width="120" />
+
+                <h1 class="title mt-3">
+                    Queue Token System
+                </h1>
+
+            </div>
+
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["Success"]
+                </div>
+            }
+
+            <form asp-action="Generate"
+                  method="post">
+
+                <div class="mb-4">
+
+                    <label>
+                        Category
+                    </label>
+
+                    <select asp-for="CategoryId"
+                            asp-items="ViewBag.Categories"
+                            class="form-select"
+                            id="categoryDropdown">
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label>
+                        Sub Category
+                    </label>
+
+                    <select asp-for="SubCategoryId"
+                            class="form-select"
+                            id="subCategoryDropdown">
+
+                        <option value="">
+                            Select Sub Category
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label>
+                        Customer Name
+                    </label>
+
+                    <input asp-for="CustomerName"
+                           class="form-control"
+                           placeholder="Optional" />
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <input asp-for="MobileNumber"
+                           class="form-control"
+                           placeholder="Optional" />
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="Optional" />
+
+                </div>
+
+                <div class="row mb-5">
+
+                    <div class="col-md-4">
+
+                        <div class="form-check option-box">
+
+                            <input type="checkbox"
+                                   name="printReceipt"
+                                   class="form-check-input"
+                                   checked />
+
+                            <label class="form-check-label">
+                                Print Receipt
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="form-check option-box">
+
+                            <input type="checkbox"
+                                   name="sendEmail"
+                                   class="form-check-input" />
+
+                            <label class="form-check-label">
+                                Send Email
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <div class="form-check option-box">
+
+                            <input type="checkbox"
+                                   name="sendSms"
+                                   class="form-check-input" />
+
+                            <label class="form-check-label">
+                                Send SMS
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary w-100 btn-touch">
+
+                    GENERATE TOKEN
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js">
+    </script>
+
+    <script>
+
+        $("#categoryDropdown").change(
+            function ()
+            {
+                var categoryId =
+                    $(this).val();
+
+                $("#subCategoryDropdown")
+                    .empty();
+
+                $.getJSON(
+                    '/Kiosk/GetSubCategories',
+                    {
+                        categoryId:
+                            categoryId
+                    },
+                    function (data)
+                    {
+                        $("#subCategoryDropdown")
+                            .append(
+                                '<option value="">Select Sub Category</option>');
+
+                        $.each(
+                            data,
+                            function (i, item)
+                            {
+                                $("#subCategoryDropdown")
+                                    .append(
+                                        '<option value="' +
+                                        item.id +
+                                        '">' +
+                                        item.name +
+                                        '</option>');
+                            });
+                    });
+            });
+
+    </script>
+
+</body>
+
+</html>

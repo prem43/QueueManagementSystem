@@ -1,388 +1,328 @@
 ﻿@using QueueManagement.Application.DTOs.Token
-
 @{
-    var pendingTokens =
-        ViewBag.PendingTokens as IEnumerable<TokenDto>;
-
-    var servingTokens =
-        ViewBag.ServingTokens as IEnumerable<TokenDto>;
-
-    var completedTokens =
-        ViewBag.CompletedTokens as IEnumerable<TokenDto>;
-
-    var skippedTokens =
-        ViewBag.SkippedTokens as IEnumerable<TokenDto>;
-
-   
+    var pendingTokens = ViewBag.PendingTokens as IEnumerable<TokenDto>;
+    var servingTokens = ViewBag.ServingTokens as IEnumerable<TokenDto>;
+    var completedTokens = ViewBag.CompletedTokens as IEnumerable<TokenDto>;
+    var skippedTokens = ViewBag.SkippedTokens as IEnumerable<TokenDto>;
 }
 
-<h2 class="mb-4">Queue Dashboard</h2>
+<style>
+    /* Dashboard KPI Cards */
+    .kpi-card {
+        border: none;
+        border-radius: 16px;
+        color: #fff;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        position: relative;
+    }
 
-<div class="row mb-4">
+        .kpi-card .card-body {
+            padding: 24px;
+            position: relative;
+            z-index: 2;
+        }
 
-    <div class="col-md-4">
+        .kpi-card h4 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
 
-        <div class="card bg-primary text-white">
+        .kpi-card h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
 
-            <div class="card-body">
+    .kpi-icon {
+        position: absolute;
+        right: -10px;
+        bottom: -20px;
+        font-size: 100px;
+        opacity: 0.15;
+        z-index: 1;
+        transform: rotate(-15deg);
+    }
 
-                <h4>Pending</h4>
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    }
 
-                <h2>@pendingTokens.Count()</h2>
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
 
-            </div>
+    .bg-gradient-dark {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
 
-        </div>
+    /* Action Bar */
+    .action-bar {
+        background: #fff;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        margin-bottom: 30px;
+        display: flex;
+        gap: 15px;
+    }
 
-    </div>
+    .btn-action {
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
 
-    <div class="col-md-4">
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
 
-        <div class="card bg-success text-white">
+    /* Modern Tables */
+    .table-section {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        margin-bottom: 30px;
+    }
 
-            <div class="card-body">
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-                <h4>Serving</h4>
+    .table thead th {
+        background: #f9fafb;
+        color: #6b7280;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        border-bottom: none;
+        padding: 15px;
+    }
 
-                <h2>@servingTokens.Count()</h2>
+    .table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6;
+        font-weight: 500;
+    }
 
-            </div>
+    .token-badge {
+        background: #f3f4f6;
+        color: #111827;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-weight: 700;
+        border: 1px solid #e5e7eb;
+    }
 
-        </div>
+    /* Small Action Buttons inside tables */
+    .btn-sm-action {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+</style>
 
-    </div>
-
-    <div class="col-md-4">
-
-        <div class="card bg-dark text-white">
-
-            <div class="card-body">
-
-                <h4>Completed</h4>
-
-                <h2>@completedTokens.Count()</h2>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="mb-4">
-
-    <a asp-action="Create"
-       class="btn btn-primary">
-
-        Generate Token
-
-    </a>
-
-    <a asp-action="CallNext"
-       class="btn btn-success">
-
-        Call Next
-
-    </a>
-
-</div>
+<h2 class="mb-4 fw-bold text-dark">Queue Command Center</h2>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">
-
-        @TempData["Error"]
-
-    </div>
+    <div class="alert alert-danger shadow-sm rounded-3"><i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["Error"]</div>
 }
 
-<hr />
-
-<h3>Pending Queue</h3>
-
-<table class="table table-bordered">
-
-    <thead>
-
-        <tr>
-
-            <th>Token</th>
-
-            <th>Queue</th>
-
-            <th>Category</th>
-
-            <th>Status</th>
-
-            <th>Customer</th>
-
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in pendingTokens)
-        {
-            <tr>
-
-                <td>@item.TokenNumber</td>
-
-                <td>@item.QueueNumber</td>
-
-                <td>@item.CategoryName</td>
-
-                <td>@item.Status</td>
-
-                <td>@item.CustomerName</td>
-
-                <td>
-
-                    <a asp-action="Transfer"
-                       asp-route-id="@item.Id"
-                       class="btn btn-warning btn-sm">
-
-                        Transfer
-
-                    </a>
-                    <a asp-action="Receipt"
-                       asp-route-id="@item.Id"
-                       class="btn btn-dark btn-sm">
-
-                        Print
-
-                    </a>
-                </td>
-
-            </tr>
-        }
-
-    </tbody>
-
-</table>
-
-<hr />
-
-<h3>Currently Serving</h3>
-
-<table class="table table-bordered">
-
-    <thead>
-
-        <tr>
-
-            <th>Token</th>
-
-            <th>Category</th>
-
-            <th>Status</th>
-
-            <th>Customer</th>
-            <th>
-                Counter
-            </th>
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in servingTokens)
-        {
-            <tr class="table-success">
-
-                <td>@item.TokenNumber</td>
-
-                <td>@item.CategoryName</td>
-
-                <td>@item.Status</td>
-
-                <td>@item.CustomerName</td>
-                <td>
-                    @item.CounterName
-                </td>
-
-                <td>
-
-                    <form asp-action="Complete"
-                          asp-route-id="@item.Id"
-                          method="post"
-                          style="display:inline;">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-success btn-sm">
-
-                            Complete
-
-                        </button>
-
-                    </form>
-
-                    <form asp-action="Skip"
-                          asp-route-id="@item.Id"
-                          method="post"
-                          style="display:inline;">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-danger btn-sm">
-
-                            Skip
-
-                        </button>
-
-                    </form>
-
-                </td>
-
-            </tr>
-        }
-
-    </tbody>
-
-</table>
-
-<hr />
-
-<h3>Completed Tokens</h3>
-
-<table class="table table-bordered">
-
-    <thead>
-
-        <tr>
-
-            <th>Token</th>
-
-            <th>Category</th>
-
-            <th>Customer</th>
-
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in completedTokens)
-        {
-            <tr class="table-dark text-white">
-
-                <td>@item.TokenNumber</td>
-
-                <td>@item.CategoryName</td>
-
-                <td>@item.CustomerName</td>
-
-                <td>
-
-                    <form asp-action="ReOpen"
-                          asp-route-id="@item.Id"
-                          method="post">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-info btn-sm">
-
-                            ReOpen
-
-                        </button>
-
-                    </form>
-
-                </td>
-
-            </tr>
-        }
-
-    </tbody>
-
-</table>
-
-<hr />
-
-<h3>Skipped Tokens</h3>
-
-<table class="table table-bordered">
-
-    <thead>
-
-        <tr>
-
-            <th>Token</th>
-
-            <th>Category</th>
-
-            <th>Customer</th>
-
-            <th>Actions</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in skippedTokens)
-        {
-            <tr class="table-warning">
-
-                <td>@item.TokenNumber</td>
-
-                <td>@item.CategoryName</td>
-
-                <td>@item.CustomerName</td>
-
-                <td>
-
-                    <form asp-action="Recall"
-                          asp-route-id="@item.Id"
-                          method="post"
-                          style="display:inline;">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-primary btn-sm">
-
-                            Recall
-
-                        </button>
-
-                    </form>
-
-                    <form asp-action="ReOpen"
-                          asp-route-id="@item.Id"
-                          method="post"
-                          style="display:inline;">
-
-                        @Html.AntiForgeryToken()
-
-                        <button type="submit"
-                                class="btn btn-info btn-sm">
-
-                            ReOpen
-
-                        </button>
-
-                    </form>
-
-                </td>
-
-            </tr>
-        }
-
-    </tbody>
-
-</table>
+<!-- KPI Row -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card kpi-card bg-gradient-primary">
+            <i class="fa-solid fa-users kpi-icon"></i>
+            <div class="card-body">
+                <h4>Pending</h4>
+                <h2>@pendingTokens.Count()</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card kpi-card bg-gradient-success">
+            <i class="fa-solid fa-volume-high kpi-icon"></i>
+            <div class="card-body">
+                <h4>Serving</h4>
+                <h2>@servingTokens.Count()</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card kpi-card bg-gradient-dark">
+            <i class="fa-solid fa-check-double kpi-icon"></i>
+            <div class="card-body">
+                <h4>Completed</h4>
+                <h2>@completedTokens.Count()</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Actions -->
+<div class="action-bar align-items-center">
+    <a asp-action="Create" class="btn btn-primary btn-action"><i class="fa-solid fa-plus"></i> Generate Token</a>
+    <a asp-action="CallNext" class="btn btn-success btn-action"><i class="fa-solid fa-bullhorn"></i> Call Next in Queue</a>
+</div>
+
+<!-- PENDING QUEUE -->
+<div class="table-section">
+    <div class="section-title"><i class="fa-regular fa-hourglass-half text-primary"></i> Pending Queue</div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Queue #</th>
+                    <th>Category</th>
+                    <th>Customer</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in pendingTokens)
+                {
+                    <tr>
+                        <td><span class="token-badge">@item.TokenNumber</span></td>
+                        <td><span class="badge bg-light text-dark border">#@item.QueueNumber</span></td>
+                        <td><span class="text-muted"><i class="fa-solid fa-folder fa-sm me-1"></i> @item.CategoryName</span></td>
+                        <td>@item.CustomerName</td>
+                        <td class="text-end">
+                            <a asp-action="Transfer" asp-route-id="@item.Id" class="btn btn-warning text-dark btn-sm-action me-1"><i class="fa-solid fa-shuffle"></i> Transfer</a>
+                            <a asp-action="Receipt" asp-route-id="@item.Id" target="_blank" class="btn btn-dark btn-sm-action"><i class="fa-solid fa-print"></i> Print</a>
+                        </td>
+                    </tr>
+                }
+                @if (!pendingTokens.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">No pending tokens.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CURRENTLY SERVING -->
+<div class="table-section border-start border-success border-4">
+    <div class="section-title"><i class="fa-solid fa-tower-broadcast text-success"></i> Currently Serving</div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Category</th>
+                    <th>Customer</th>
+                    <th>Counter</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in servingTokens)
+                {
+                    <tr style="background-color: rgba(16, 185, 129, 0.05);">
+                        <td><span class="token-badge text-success border-success">@item.TokenNumber</span></td>
+                        <td>@item.CategoryName</td>
+                        <td class="fw-bold">@item.CustomerName</td>
+                        <td><span class="badge bg-success">@item.CounterName</span></td>
+                        <td class="text-end">
+                            <form asp-action="Complete" asp-route-id="@item.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-success btn-sm-action me-1"><i class="fa-solid fa-check"></i> Complete</button>
+                            </form>
+                            <form asp-action="Skip" asp-route-id="@item.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm-action"><i class="fa-solid fa-forward-step"></i> Skip</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                @if (!servingTokens.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">No tokens currently being served.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- COMPLETED TOKENS -->
+    <div class="col-xl-6">
+        <div class="table-section h-100">
+            <div class="section-title"><i class="fa-solid fa-check-circle text-muted"></i> Completed</div>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead><tr><th>Token</th><th>Category</th><th>Customer</th><th class="text-end">Action</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in completedTokens)
+                        {
+                            <tr>
+                                <td><span class="text-muted fw-bold">@item.TokenNumber</span></td>
+                                <td class="text-muted small">@item.CategoryName</td>
+                                <td class="text-muted">@item.CustomerName</td>
+                                <td class="text-end">
+                                    <form asp-action="ReOpen" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-primary btn-sm rounded-3"><i class="fa-solid fa-rotate-left"></i> ReOpen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- SKIPPED TOKENS -->
+    <div class="col-xl-6">
+        <div class="table-section h-100 border-start border-warning border-4">
+            <div class="section-title"><i class="fa-solid fa-bell-slash text-warning"></i> Skipped</div>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle">
+                    <thead><tr><th>Token</th><th>Category</th><th>Customer</th><th class="text-end">Actions</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in skippedTokens)
+                        {
+                            <tr>
+                                <td><span class="text-danger fw-bold">@item.TokenNumber</span></td>
+                                <td class="text-muted small">@item.CategoryName</td>
+                                <td class="text-muted">@item.CustomerName</td>
+                                <td class="text-end">
+                                    <form asp-action="Recall" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary btn-sm rounded-3 me-1"><i class="fa-solid fa-phone-volume"></i> Recall</button>
+                                    </form>
+                                    <form asp-action="ReOpen" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-info btn-sm rounded-3"><i class="fa-solid fa-rotate-left"></i> ReOpen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

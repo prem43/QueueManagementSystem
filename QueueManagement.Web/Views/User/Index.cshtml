@@ -1,123 +1,214 @@
 ﻿@model IEnumerable<QueueManagement.Application.DTOs.User.UserDto>
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "User Management";
 }
 
-<div class="d-flex justify-content-between
-            align-items-center mb-4">
+<style>
+    /* --- Page & Table Styling --- */
+    .page-title {
+        font-weight: 700;
+        color: #111827;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
 
-    <h2 class="mb-0">
-        User Management
-    </h2>
+    .btn-create {
+        background-color: var(--primary-color, #4f46e5);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: white;
+    }
 
-    <a asp-action="Create"
-       class="btn btn-primary">
+        .btn-create:hover {
+            background-color: var(--primary-hover, #4338ca);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
 
-        <i class="fa fa-plus"></i>
-        Create User
+    /* Card & Table */
+    .table-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+    }
 
-    </a>
+    .table-custom {
+        margin-bottom: 0;
+    }
 
-</div>
+        .table-custom thead th {
+            background-color: #f9fafb;
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-<div class="card shadow">
+        .table-custom tbody td {
+            padding: 16px 24px;
+            vertical-align: middle;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-    <div class="card-body">
+        .table-custom tbody tr {
+            transition: background-color 0.2s ease;
+        }
 
-        <div class="table-responsive">
+            .table-custom tbody tr:hover {
+                background-color: #f9fafb;
+            }
 
-            <table class="table table-bordered
-                         table-hover align-middle">
+    /* User Avatar & Details */
+    .user-info-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-                <thead class="table-dark">
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
 
-                    <tr>
+    /* Modern Role Badges */
+    .role-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
 
-                        <th>#</th>
+    .role-admin {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
 
-                        <th>Full Name</th>
+    .role-staff {
+        background-color: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
 
-                        <th>Username</th>
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
 
-                        <th>Email</th>
+        .empty-state i {
+            font-size: 48px;
+            color: #d1d5db;
+            margin-bottom: 15px;
+        }
+</style>
 
-                        <th>Role</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @if (Model != null && Model.Any())
-                    {
-                        int count = 1;
-
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-
-                                <td>@count</td>
-
-                                <td>
-                                    @item.FullName
-                                </td>
-
-                                <td>
-                                    @item.UserName
-                                </td>
-
-                                <td>
-                                    @item.Email
-                                </td>
-
-                                <td>
-
-                                    @if (item.Role == "Admin")
-                                    {
-                                        <span class="badge bg-danger">
-
-                                            Admin
-
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-primary">
-
-                                            Staff
-
-                                        </span>
-                                    }
-
-                                </td>
-
-                            </tr>
-
-                            count++;
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-
-                            <td colspan="5"
-                                class="text-center text-muted">
-
-                                No users found.
-
-                            </td>
-
-                        </tr>
-                    }
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+<!-- Header Section -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title">User Management</h2>
+        <p class="text-muted small mb-0 mt-1">Manage system administrators and staff members.</p>
     </div>
 
+    <a asp-action="Create" class="btn btn-create">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Create User</span>
+    </a>
+</div>
+
+<!-- Data Table Card -->
+<div class="card table-card">
+    <div class="table-responsive">
+        <table class="table table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Full Name</th>
+                    <th>Username</th>
+                    <th>Email Address</th>
+                    <th>System Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    int count = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="text-muted fw-semibold">@count</td>
+                            <td>
+                                <div class="user-info-wrapper">
+                                    <div class="user-avatar">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <span class="fw-bold text-dark">@item.FullName</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-muted fw-medium">@@@item.UserName</span>
+                            </td>
+                            <td class="text-muted">
+                                <i class="fa-regular fa-envelope me-2 small"></i>@item.Email
+                            </td>
+                            <td>
+                                @if (item.Role == "Admin")
+                                {
+                                    <span class="role-badge role-admin">
+                                        <i class="fa-solid fa-shield-halved"></i> Admin
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="role-badge role-staff">
+                                        <i class="fa-solid fa-user-tie"></i> Staff
+                                    </span>
+                                }
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="border-0">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-users-slash"></i>
+                                <h5 class="text-dark fw-semibold mt-2">No Users Found</h5>
+                                <p class="text-muted mb-4">There are currently no users registered in the system.</p>
+                                <a asp-action="Create" class="btn btn-outline-primary rounded-pill px-4">
+                                    Add Your First User
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

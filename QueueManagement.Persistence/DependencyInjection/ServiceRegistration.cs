@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using QueueManagement.Application.Interfaces;
+using QueueManagement.Application.Interfaces.Services;
 using QueueManagement.Domain.Entities;
+using QueueManagement.Infrastructure.Services;
 using QueueManagement.Persistence.Context;
 using QueueManagement.Persistence.Repositories;
 namespace QueueManagement.Persistence.DependencyInjection;
@@ -20,6 +22,13 @@ public static class ServiceRegistration
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services
+    .AddScoped<IEmailService,
+        EmailService>();
+
+        services
+            .AddScoped<ISmsService,
+                SmsService>();
         return services;
     }
 }

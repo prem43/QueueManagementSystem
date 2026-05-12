@@ -1,58 +1,220 @@
 ﻿@model IEnumerable<QueueManagement.Application.DTOs.Counter.CounterDto>
 
-<h2>Counters</h2>
+<style>
+    /* --- Page & Table Styling --- */
+    .page-title {
+        font-weight: 700;
+        color: #111827;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
 
-<a asp-action="Create"
-   class="btn btn-primary mb-3">
-    Create Counter
-</a>
+    .btn-create {
+        background-color: var(--primary-color, #4f46e5);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-<table class="table table-bordered">
+        .btn-create:hover {
+            background-color: var(--primary-hover, #4338ca);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            color: white;
+        }
 
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Counter No</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+    /* Card & Table */
+    .table-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+    }
 
-    <tbody>
+    .table-custom {
+        margin-bottom: 0;
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
+        .table-custom thead th {
+            background-color: #f9fafb;
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-                <td>@item.Name</td>
+        .table-custom tbody td {
+            padding: 16px 24px;
+            vertical-align: middle;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+        }
 
-                <td>@item.CounterNumber</td>
+        .table-custom tbody tr {
+            transition: background-color 0.2s ease;
+        }
 
-                <td>
-                    @(item.IsActive
-                                    ? "Active"
-                                    : "Inactive")
-            </td>
+            .table-custom tbody tr:hover {
+                background-color: #f9fafb;
+            }
 
-                <td>
+    /* UI Elements */
+    .counter-badge {
+        background-color: rgba(79, 70, 229, 0.1);
+        color: #4f46e5;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
 
-                    <a asp-action="Edit"
-                       asp-route-id="@item.Id"
-                       class="btn btn-warning btn-sm">
-                        Edit
-                    </a>
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
 
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id"
-                       class="btn btn-danger btn-sm">
-                        Delete
-                    </a>
+    .status-active {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
 
-                </td>
+    .status-inactive {
+        background-color: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+    }
 
-            </tr>
+    /* Action Buttons */
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        transition: all 0.2s;
+        color: #9ca3af;
+    }
+
+        .action-btn.edit:hover {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .action-btn.delete:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #d1d5db;
+            margin-bottom: 15px;
+        }
+</style>
+
+<!-- Header Section -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="page-title">Counters</h2>
+        <p class="text-muted small mb-0 mt-1">Manage serving counters and their availability.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-create text-white">
+        <i class="fa-solid fa-plus"></i>
+        <span>Create Counter</span>
+    </a>
+</div>
+
+<!-- Data Table Card -->
+<div class="card table-card">
+    <div class="table-responsive">
+        <table class="table table-custom">
+            <thead>
+                <tr>
+                    <th>Counter Name</th>
+                    <th>Counter No.</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold text-dark">
+                                <i class="fa-solid fa-desktop text-muted me-2"></i> @item.Name
+                            </td>
+                            <td>
+                                <span class="counter-badge">
+                                    <i class="fa-solid fa-hashtag small"></i> @item.CounterNumber
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span class="status-badge status-active">
+                                        <i class="fa-solid fa-circle-check me-1"></i> Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge status-inactive">
+                                        <i class="fa-solid fa-circle-minus me-1"></i> Inactive
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="action-btn edit" title="Edit Counter">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="action-btn delete" title="Delete Counter">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 }
-
-    </tbody>
-
-</table>
+                else
+                {
+                    <!-- Empty State -->
+                    <tr>
+                        <td colspan="4" class="border-0">
+                            <div class="empty-state">
+                                <i class="fa-solid fa-display"></i>
+                                <h5 class="text-dark fw-semibold mt-2">No Counters Found</h5>
+                                <p class="text-muted mb-4">You haven't set up any serving counters yet.</p>
+                                <a asp-action="Create" class="btn btn-outline-primary rounded-pill px-4">
+                                    Add Your First Counter
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

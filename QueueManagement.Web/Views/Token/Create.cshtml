@@ -1,119 +1,226 @@
 ﻿@model QueueManagement.Application.DTOs.Token.GenerateTokenDto
 
-<h2>Generate Token</h2>
+<style>
+    .form-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-top: 20px;
+    }
 
-<form asp-action="Create" method="post">
+    .form-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
 
-    <div asp-validation-summary="All"
-         class="text-danger"></div>
+    .form-header {
+        background-color: #f0fdf4;
+        padding: 24px 30px;
+        border-bottom: 1px solid #d1fae5;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-    <div class="mb-3">
+        .form-header .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
 
-        <label>Category</label>
+        .form-header h4 {
+            margin: 0;
+            font-weight: 700;
+            color: #064e3b;
+        }
 
-        <select asp-for="CategoryId"
-                asp-items="ViewBag.Categories"
-                class="form-select"
-                id="categoryDropdown">
+        .form-header p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #047857;
+        }
 
-            <option value="0">
-                Select Category
-            </option>
+    .form-body {
+        padding: 35px 30px;
+    }
 
-        </select>
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
 
-        <span asp-validation-for="CategoryId"
-              class="text-danger"></span>
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+    }
 
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 41px;
+            color: #9ca3af;
+            font-size: 1.1rem;
+            z-index: 5;
+        }
+
+    .form-control, .form-select {
+        padding: 14px 15px 14px 45px;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        background-color: #f9fafb;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #ffffff;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+    .input-wrapper:focus-within i {
+        color: #10b981;
+    }
+
+    .btn-success-custom {
+        background-color: #10b981;
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-success-custom:hover {
+            background-color: #059669;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+        }
+
+    .btn-light {
+        background: #f3f4f6;
+        border-radius: 10px;
+        padding: 12px 28px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="form-wrapper">
+    <div class="card form-card">
+        <div class="form-header">
+            <div class="icon-box"><i class="fa-solid fa-ticket"></i></div>
+            <div>
+                <h4>Generate Token</h4>
+                <p>Register a new customer and assign them to a queue.</p>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger fw-bold small mb-3"></div>
+
+                <!-- Group 1: Category Settings -->
+                <h6 class="text-muted fw-bold mb-3 border-bottom pb-2">Queue Assignment</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-wrapper">
+                            <label class="form-label">Category</label>
+                            <i class="fa-solid fa-folder"></i>
+                            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select" id="categoryDropdown">
+                                <option value="0">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small mt-1 d-block"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-wrapper">
+                            <label class="form-label">SubCategory</label>
+                            <i class="fa-solid fa-layer-group"></i>
+                            <select asp-for="SubCategoryId" class="form-select" id="subCategoryDropdown">
+                                <option value="">-- Select SubCategory --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 2: Customer Details -->
+                <h6 class="text-muted fw-bold mt-2 mb-3 border-bottom pb-2">Customer Details</h6>
+                <div class="input-wrapper">
+                    <label class="form-label">Customer Name</label>
+                    <i class="fa-regular fa-user"></i>
+                    <input asp-for="CustomerName" class="form-control" placeholder="Enter full name" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-wrapper">
+                            <label class="form-label">Mobile Number</label>
+                            <i class="fa-solid fa-phone"></i>
+                            <input asp-for="MobileNumber" class="form-control" placeholder="e.g., 9876543210" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-wrapper">
+                            <label class="form-label">Email Address (Optional)</label>
+                            <i class="fa-regular fa-envelope"></i>
+                            <input asp-for="Email" class="form-control" placeholder="e.g., mail@example.com" />
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mb-4 mt-2" style="border-color: #e5e7eb;" />
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-success-custom"><i class="fa-solid fa-print"></i> Generate Token</button>
+                    <a asp-action="Index" class="btn btn-light text-muted">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="mb-3">
-
-        <label>SubCategory</label>
-
-        <select asp-for="SubCategoryId"
-                class="form-select"
-                id="subCategoryDropdown">
-
-            <option value="">
-                Select SubCategory
-            </option>
-
-        </select>
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Customer Name</label>
-
-        <input asp-for="CustomerName"
-               class="form-control" />
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Mobile Number</label>
-
-        <input asp-for="MobileNumber"
-               class="form-control" />
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Email</label>
-
-        <input asp-for="Email"
-               class="form-control" />
-
-    </div>
-
-    <button type="submit"
-            class="btn btn-success">
-        Generate
-    </button>
-
-</form>
+</div>
 
 @section Scripts {
-
     @{
-        await Html.RenderPartialAsync(
-            "_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
+        $(document).ready(function() {
+            $("#categoryDropdown").change(function () {
+                var categoryId = $(this).val();
+                var subDropdown = $("#subCategoryDropdown");
 
-        $("#categoryDropdown").change(function () {
+                subDropdown.empty();
+                subDropdown.append('<option value="">Loading...</option>');
 
-            var categoryId = $(this).val();
-
-            $("#subCategoryDropdown").empty();
-
-            $.getJSON('/Token/GetSubCategories',
-                { categoryId: categoryId },
-                function (data) {
-
-                    $("#subCategoryDropdown").append(
-                        '<option value="">Select SubCategory</option>'
-                    );
+                $.getJSON('/Token/GetSubCategories', { categoryId: categoryId }, function (data) {
+                    subDropdown.empty();
+                    subDropdown.append('<option value="">-- Select SubCategory --</option>');
 
                     $.each(data, function (i, item) {
-
-                        $("#subCategoryDropdown").append(
-                            '<option value="' + item.id + '">'
-                            + item.name +
-                            '</option>'
-                        );
-
+                        subDropdown.append('<option value="' + item.id + '">' + item.name + '</option>');
                     });
-
+                }).fail(function() {
+                    subDropdown.empty();
+                    subDropdown.append('<option value="">Error loading data</option>');
                 });
-
+            });
         });
-
     </script>
-
 }

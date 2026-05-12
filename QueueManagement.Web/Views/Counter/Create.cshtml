@@ -1,42 +1,221 @@
 ﻿@model QueueManagement.Application.DTOs.Counter.CreateCounterDto
 
-<h2>Create Counter</h2>
-
-<form asp-action="Create" method="post">
-
-    <div asp-validation-summary="All"
-         class="text-danger"></div>
-
-    <div class="mb-3">
-
-        <label>Name</label>
-
-        <input asp-for="Name"
-               class="form-control" />
-
-    </div>
-
-    <div class="mb-3">
-
-        <label>Counter Number</label>
-
-        <input asp-for="CounterNumber"
-               class="form-control" />
-
-    </div>
-
-    <button type="submit"
-            class="btn btn-success">
-        Save
-    </button>
-
-</form>
-
-@section Scripts {
-
-    @{
-        await Html.RenderPartialAsync(
-            "_ValidationScriptsPartial");
+<style>
+    /* --- Form Wrapper & Card Styling --- */
+    .form-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        padding-top: 20px;
     }
 
+    .form-card {
+        border: none;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        overflow: hidden;
+    }
+
+    /* --- Premium Header --- */
+    .form-header {
+        background-color: #f9fafb;
+        padding: 24px 30px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .form-header .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(16, 185, 129, 0.1); /* Soft Emerald Green */
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .form-header h4 {
+            margin: 0;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+    .form-body {
+        padding: 35px 30px;
+    }
+
+    /* --- Input Styling --- */
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+    }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 41px;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+    .form-control {
+        padding: 14px 15px 14px 45px;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        background-color: #f9fafb;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: none !important;
+        color: #111827;
+    }
+
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #4f46e5;
+        }
+
+    .input-wrapper:focus-within i {
+        color: #4f46e5;
+    }
+
+    /* --- Validation Styling --- */
+    .validation-summary-errors {
+        background-color: #fef2f2;
+        border: 1px solid #fee2e2;
+        color: #ef4444;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        font-size: 0.9rem;
+    }
+
+        .validation-summary-errors ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+    /* --- Action Buttons --- */
+    .btn-success-custom {
+        background-color: #10b981;
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-success-custom:hover {
+            background-color: #059669;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25);
+        }
+
+    .btn-light {
+        background-color: #f3f4f6;
+        color: #4b5563;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-light:hover {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="form-wrapper">
+    <div class="card form-card">
+
+        <!-- Premium Header -->
+        <div class="form-header">
+            <div class="icon-box">
+                <i class="fa-solid fa-display"></i>
+            </div>
+            <div>
+                <h4>Create New Counter</h4>
+                <p>Register a new serving counter for the queue system.</p>
+            </div>
+        </div>
+
+        <!-- Form Body -->
+        <div class="form-body">
+            <form asp-action="Create" method="post">
+
+                <div asp-validation-summary="All" class="validation-summary-valid" data-valmsg-summary="true"></div>
+
+                <!-- Counter Name -->
+                <div class="input-wrapper">
+                    <label asp-for="Name" class="form-label">Counter Name</label>
+                    <i class="fa-solid fa-desktop"></i>
+                    <input asp-for="Name" class="form-control" placeholder="e.g., General Counter" autocomplete="off" />
+                    <span asp-validation-for="Name" class="text-danger small mt-1 d-block fw-medium"></span>
+                </div>
+
+                <!-- Counter Number -->
+                <div class="input-wrapper">
+                    <label asp-for="CounterNumber" class="form-label">Counter Number</label>
+                    <i class="fa-solid fa-hashtag"></i>
+                    <input asp-for="CounterNumber" class="form-control" placeholder="e.g., 1" autocomplete="off" />
+                    <span asp-validation-for="CounterNumber" class="text-danger small mt-1 d-block fw-medium"></span>
+                </div>
+
+                <hr class="mb-4" style="border-color: #e5e7eb;" />
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success-custom">
+                        <i class="fa-solid fa-check"></i> Save Counter
+                    </button>
+                    <a asp-action="Index" class="btn btn-light">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
